@@ -1,5 +1,5 @@
 ﻿import React from 'react'
-import { Box, TextField, InputAdornment, CircularProgress, Button } from '@mui/material'
+import { Box, Paper, TextField, InputAdornment, CircularProgress, Button, Typography } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
 import { useDebounce } from '../hooks/useDebounce'
 import { useGitHub } from '../state/GitHubContext'
@@ -40,34 +40,70 @@ const SearchBar: React.FC = () => {
   const q = value.trim()
   const owner = parseOwner(q)
   const showMinLen = q && q.length < MIN_QUERY_LEN
-  const validationMsg = showMinLen ? `Type at least ${MIN_QUERY_LEN} characters` : ' '
   const canSearch = Boolean(owner) && q.length >= MIN_QUERY_LEN && !loadingUser
 
   return (
-    <Box component="form" onSubmit={onSubmit}>
-      <TextField
-        fullWidth
-        value={value}
-        onChange={e => { const v = e.target.value; setValue(v); if (v.trim().length < MIN_QUERY_LEN) clearResults(); }}
-        placeholder={'Enter user and repository (e.g., user/repo)'}
-        helperText={validationMsg}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <SearchIcon />
-            </InputAdornment>
-          ),
-          endAdornment: (
-            <InputAdornment position="end">
-              {loadingUser ? (
-                <CircularProgress size={18} />
-              ) : (
-                <Button type="submit" variant="contained" size="small" disabled={!canSearch}>Search</Button>
-              )}
-            </InputAdornment>
-          ),
+    <Box>
+      <Paper
+        component="form"
+        onSubmit={onSubmit}
+        elevation={1}
+        sx={{
+          p: 1,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1,
+          borderRadius: 2,
+          bgcolor: 'background.paper',
         }}
-      />
+      >
+        <TextField
+          fullWidth
+          size="small"
+          value={value}
+          onChange={(e) => {
+            const v = e.target.value
+            setValue(v)
+            if (v.trim().length < MIN_QUERY_LEN) clearResults()
+          }}
+          placeholder={'Enter user or user/repo'}
+          variant="outlined"
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon color="action" />
+              </InputAdornment>
+            ),
+          }}
+          sx={{
+            '& .MuiOutlinedInput-root': {
+              borderRadius: 1.5,
+            },
+          }}
+        />
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          size="medium"
+          disableElevation
+          startIcon={loadingUser ? <CircularProgress size={16} color="inherit" /> : undefined}
+          disabled={!canSearch}
+          sx={{
+            px: 2,
+            borderRadius: 1.5,
+            textTransform: 'none',
+            minWidth: 100,
+          }}
+        >
+          {loadingUser ? 'Searching…' : 'Search'}
+        </Button>
+      </Paper>
+      {showMinLen && (
+        <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, ml: 1 }}>
+          Type at least {MIN_QUERY_LEN} characters
+        </Typography>
+      )}
     </Box>
   )
 }
