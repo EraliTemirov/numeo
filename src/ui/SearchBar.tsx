@@ -21,10 +21,6 @@ const SearchBar: React.FC = () => {
   const debounced = useDebounce(value, 600)
 
   React.useEffect(() => {
-    setValue(username)
-  }, [username])
-
-  React.useEffect(() => {
     const owner = parseOwner(debounced)
     const q = debounced.trim()
     if (!owner || q.length < MIN_QUERY_LEN) return

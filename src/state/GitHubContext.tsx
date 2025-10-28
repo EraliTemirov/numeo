@@ -55,8 +55,7 @@ type Ctx = State & {
 
 const GitHubContext = React.createContext<Ctx | undefined>(undefined)
 
-// Simple localStorage cache per username
-const CACHE_TTL_MS = 10 * 60 * 1000 // 10 minutes
+const CACHE_TTL_MS = 10 * 60 * 1000
 
 function readCache<T>(key: string): T | null {
   try {
@@ -71,7 +70,7 @@ function readCache<T>(key: string): T | null {
 }
 
 function writeCache<T>(key: string, data: T) {
-  try { localStorage.setItem(key, JSON.stringify({ time: Date.now(), data })) } catch {}
+  try { localStorage.setItem(key, JSON.stringify({ time: Date.now(), data })) } catch { }
 }
 
 export const GitHubProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -160,7 +159,7 @@ export const GitHubProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const clearResults = React.useCallback(() => {
     if (userCtrl.current) userCtrl.current.abort()
     if (reposCtrl.current) reposCtrl.current.abort()
-    try { localStorage.removeItem('gh:lastUsername') } catch {}
+    try { localStorage.removeItem('gh:lastUsername') } catch { }
     setState({ ...initialState })
   }, [])
 
@@ -171,7 +170,7 @@ export const GitHubProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       if (q && q.length >= MIN_QUERY_LEN) {
         searchUser(q)
       }
-    } catch {}
+    } catch { }
   }, [searchUser])
 
   const value: Ctx = React.useMemo(() => ({

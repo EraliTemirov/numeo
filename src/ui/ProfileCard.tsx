@@ -40,7 +40,7 @@ const ProfileCard: React.FC = () => {
 
   if (!userData) return null
 
-  const initials = (userData.name || userData.login || '?').split(' ').map(s => s[0]).slice(0,2).join('').toUpperCase()
+  const initials = (userData.name || userData.login || '?').split(' ').map(s => s[0]).slice(0, 2).join('').toUpperCase()
   const company = userData.company?.trim()
   const location = userData.location?.trim()
   const blog = userData.blog?.trim()
